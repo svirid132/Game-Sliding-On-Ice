@@ -7,10 +7,6 @@
     background-color: #0202f0;
 }
 
-.Game {
-    /* background: url(screen/pingvins-100.jpg); */
-}
-
 .Menu .buttons {
     position: absolute;
     transform: translate(-50%, -50%);
