@@ -1,6 +1,22 @@
 let menu = document.querySelector('.Menu .play');
 menu.addEventListener('click', initGame);
 
+const WIDTH_FIELD = 300;
+const HEIGHT_FIELD = 400;
+const WIDTH_PERSON = 45;
+const HEIGHT_PERSON = 50;
+const BEGIN_Y = 0;
+let currentIndexFrame = 0;
+
+const WIDTH_PLATFORM = 60;
+const HEIGHT_PLATFORM = 60;
+const COUNT_MAX_PLATFORM = WIDTH_FIELD / WIDTH_PLATFORM;
+const COUNT_VEIW_PLATFORM = 6; 
+
+const X_BEGIN_FOR_PERSON = 0; 
+const Y_BEGIN_FOR_PERSON = HEIGHT_FIELD - HEIGHT_PLATFORM - 40;
+// const Y_BEGIN_FOR_PERSON = 0;
+
 class managerSpriteCoordinate {
     #widthItemSprite = 0;
     #heightItemSprite = 0;
@@ -183,32 +199,130 @@ class Person {
     }
 };
 
+class Platform {
+    #firstBlock = {
+        x: 0,
+        y: 0,
+    };
+    #endBlock = {
+        x: 0,
+        y: 0,
+    }
+    #coordinates; 
+    #spriteCoordinates;
+
+    constructor() {
+        const x = WIDTH_PLATFORM * this.getRandomNum(0, COUNT_MAX_PLATFORM - 1);
+        const y = 100;
+        this.#firstBlock.x = x;
+        this.#firstBlock.y = y;
+
+        const x_ =  WIDTH_PLATFORM * this.getRandomNum(this.#firstBlock.x / WIDTH_PLATFORM + 1, 
+            COUNT_MAX_PLATFORM - 1); 
+        const y_ = 100;
+        this.#endBlock.x = x_;
+        this.#endBlock.y = y_;
+        this.createCoordinatePlatform();
+        this.createCoordinateSprite();
+    }
+
+    createCoordinatePlatform() {
+        const countBlock = ((this.#endBlock.x + WIDTH_PLATFORM) - this.#firstBlock.x) / WIDTH_PLATFORM;
+        this.#coordinates = new Array(countBlock);
+        for (let i = 0; i < countBlock; ++i) {
+            const x = (i * WIDTH_PLATFORM) + this.#firstBlock.x;
+            this.#coordinates[i] = {
+                x: x,
+                y: this.#firstBlock.y,
+            };
+        }
+    }
+
+    createCoordinateSprite() {
+        const countBlock = this.#coordinates.length;
+        this.#spriteCoordinates = new Array(countBlock);
+        for (let i = 0; i < countBlock; ++i) {
+            const row = this.getRandomNum(0, 1);
+            if (i === 0) {
+                this.#spriteCoordinates[0] = {
+                    x: 0,
+                    y: row * HEIGHT_PLATFORM,
+                }
+                continue;
+            } else if (i === countBlock - 1) {
+                console.log(`blcok - 1: ${i}`);
+                console.log((COUNT_VEIW_PLATFORM - 1) * WIDTH_PLATFORM);
+                this.#spriteCoordinates[countBlock - 1] = {
+                    x: ((COUNT_VEIW_PLATFORM - 1) * WIDTH_PLATFORM),
+                    y: row * HEIGHT_PLATFORM,
+                }
+                continue;
+            }
+            console.log(i);
+            const columnSprite = this.getRandomNum(1, COUNT_VEIW_PLATFORM - 2);
+            this.#spriteCoordinates[i] = {
+                x: columnSprite * WIDTH_PLATFORM,
+                y: row * HEIGHT_PLATFORM,
+            }
+        }
+    }
+
+    getCoordinates() {
+        return this.#coordinates;
+    }
+
+    getSpriteCoordinates() {
+        return this.#spriteCoordinates;
+    }
+
+    getRandomNum(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+} 
+
+class Platforms {
+    #coordinate = {
+        x: 0,
+        y: 0,
+    };
+    #countBlock;
+    
+    addPlatform(y, countBlock) {
+
+    }
+}
+
+class logicGame {
+    #person;
+    #platforms = new Array();
+    constructor(person) {
+        this.#person = person;
+    };
+
+    add(platform) {
+        this.#platforms.add(platform);
+    }
+
+    delete(platform) {
+        this.#platforms.delete(platform);
+    }
+};
+
 function initGame() {
     document.querySelector('.Menu').hidden = true;
     let game = document.querySelector('.Game');
     game.hidden = false;
 }
 
-const WIDTH_FIELD = 300;
-const HEIGHT_FIELD = 400;
-const WIDTH_PERSON = 45;
-const HEIGHT_PERSON = 50;
-const BEGIN_Y = 0;
-let currentIndexFrame = 0;
-
-const WIDTH_PLATFORM = 60;
-const HEIGHT_PLATFORM = 60;
-const COUNT_MAX_PLATFORM_WIDTH = WIDTH_FIELD / WIDTH_PLATFORM;
-
-const X_BEGIN_FOR_PERSON = 0; 
-const Y_BEGIN_FOR_PERSON = HEIGHT_FIELD - HEIGHT_PLATFORM - 40;
-// const Y_BEGIN_FOR_PERSON = 0;
-
 let person = new Person(X_BEGIN_FOR_PERSON, Y_BEGIN_FOR_PERSON, WIDTH_PERSON, HEIGHT_PERSON);
 person.setSprite('screen/pingvins.png', WIDTH_PERSON, HEIGHT_PERSON);
 
 let leterTime;
 let needPerson = 100;
+
+let platform = new Platform;
+
 
 function playGame() {
 
@@ -220,7 +334,7 @@ function playGame() {
 
     ctx.clearRect(0, 0,  WIDTH_FIELD, HEIGHT_FIELD);
 
-    for (let i = 0 ; i < COUNT_MAX_PLATFORM_WIDTH; ++i) {
+    for (let i = 0 ; i < COUNT_MAX_PLATFORM; ++i) {
         let numPlatform = getRandomIntInclusive(1, 4);
         let xSprite = WIDTH_PLATFORM * numPlatform;
         let xField = WIDTH_PLATFORM * i;
@@ -246,20 +360,31 @@ function playGame() {
         WIDTH_PERSON, HEIGHT_PERSON);
 
 
-        for (let i = 0 ; i < COUNT_MAX_PLATFORM_WIDTH; ++i) {
-            let numPlatform = getRandomIntInclusive(1, 4);
-            let xSprite = WIDTH_PLATFORM * numPlatform;
-            let xField = WIDTH_PLATFORM * i;
-            let yField = HEIGHT_FIELD - HEIGHT_PLATFORM - 150;
-            ctx.drawImage(imgPlatform, 
-                xSprite, 0,
-                WIDTH_PLATFORM, HEIGHT_PLATFORM,
-                xField, yField,
-            WIDTH_PLATFORM, HEIGHT_PLATFORM - 20);
-    }
+    //     for (let i = 0 ; i < COUNT_MAX_PLATFORM; ++i) {
+    //         let numPlatform = getRandomIntInclusive(1, 4);
+    //         let xSprite = WIDTH_PLATFORM * numPlatform;
+    //         let xField = WIDTH_PLATFORM * i;
+    //         let yField = HEIGHT_FIELD - HEIGHT_PLATFORM - 150;
+    //         ctx.drawImage(imgPlatform, 
+    //             xSprite, 0,
+    //             WIDTH_PLATFORM, HEIGHT_PLATFORM,
+    //             xField, yField,
+    //         WIDTH_PLATFORM, HEIGHT_PLATFORM - 20);
+    // }
 
     if (currentIndexFrame === 3) currentIndexFrame = 0; 
     ++currentIndexFrame;
+
+    const platformCoordinates = platform.getCoordinates();
+    const spriteCoordinates = platform.getSpriteCoordinates();
+    
+    for (let i = 0; i < platformCoordinates.length; ++i) {
+        ctx.drawImage(imgPlatform, 
+        spriteCoordinates[i].x, spriteCoordinates[i].y, 
+        WIDTH_PLATFORM, HEIGHT_PLATFORM, 
+        platformCoordinates[i].x, platformCoordinates[i].y, 
+        WIDTH_PLATFORM, HEIGHT_PLATFORM);
+    }
 
     leterTime = now; 
 }
