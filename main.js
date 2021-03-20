@@ -4,14 +4,9 @@ menu.addEventListener('click', initGame);
 class managerSpriteCoordinate {
     #widthItemSprite = 0;
     #heightItemSprite = 0;
-    #indexRow = 0;
-    #indexColumn = 0;
-    #direction = {
-        left: false,
-        right: false,
-        up: false,
-        down: false,
-    };
+
+    #indexStateMove = 0;//0 - move 2 - jump
+    #indexDirec = 0;//0 - right 1 - left
 
     constructor (widthItemSprite, heightItemSprite) {
         this.#widthItemSprite = widthItemSprite;
@@ -19,17 +14,26 @@ class managerSpriteCoordinate {
     }
 
     setDirection(direc) { //left, right, up, down
-        let newArrDir = Object.entries(direc);
-        let currentArrDir = Object.entries(this.#direction);
+        if (direc.right) {
+            this.#indexDirec = 0;
+        }  else if (direc.left) {
+            this.#indexDirec = 1;
+        }
 
-        
+        const isJump = direc.up || direc.down;
+        if (isJump){
+             this.#indexStateMove = 2;
+        } else {
+            this.#indexStateMove = 0;
+        }
     }
 
-    getCoordinate() {
+    getCoordinate(indexColumn) {
+        const indexRow = this.#indexStateMove + this.#indexDirec;
         return (
             {
-                x: this.#indexColumn * this.#widthItemSprite, 
-                y: this.#indexRow * this.#heightItemSprite, 
+                x: indexColumn * this.#widthItemSprite, 
+                y: indexRow * this.#heightItemSprite, 
             });
     }
 };
@@ -44,7 +48,7 @@ class Person {
         left: false,
         up: false,
         down: false,
-        speedStep: 50,
+        speedStep: 80,
         speedJump: 170,
         onUp: 0,
     };
@@ -79,6 +83,7 @@ class Person {
                 this.#move.right = true;
                 break;
         }
+        this.#spriteCoordinate.setDirection(this.#move);
     }
 
     resertSpriteColumn() {
@@ -118,26 +123,14 @@ class Person {
     }
 
     getSpriteCoordinate() {
-        const jupm = isJump();
-        const row = (this.#move.right === true && jump ? 2 : 
-                    this.#move.right === true && !jump ? 0 :
-                    this.#move.left === true && jump ? 3 : 1);
-        const 
-        if(this.isJump()) {
-            const row = (this.#move.right === true);
-            if ()
-        } else {
-
-        }
-
         if (this.#move.up && this.#move.right) {
-            return this.#spriteCoordinate.getCoordinate(2, 1);
+            return this.#spriteCoordinate.getCoordinate(1);
         } else if (this.#move.down) {
-            return this.#spriteCoordinate.getCoordinate(1, 2);
+            return this.#spriteCoordinate.getCoordinate(2);
         } else if (this.#move.left || this.#move.right) {
-            return this.#spriteCoordinate.getCoordinate(0, this.#spriteProps.indexColumn);
+            return this.#spriteCoordinate.getCoordinate(this.#spriteProps.indexColumn);
         }
-        return this.#spriteCoordinate.getCoordinate(0, 0);
+        return this.#spriteCoordinate.getCoordinate(0);
     }
 
     updateCoordinate(dt) {
