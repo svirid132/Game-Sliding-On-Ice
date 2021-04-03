@@ -8,7 +8,6 @@ export class CheckerLogicPlatform {
         this.setChecker(new checkerDownPlatform);
     };
     setChecker(checker) {
-        console.log(checker.name);
         this.checker = checker;
     }
     check() {
@@ -24,11 +23,9 @@ class checkerDownPlatform {
         let platform = checkLogic.coordinatePlatform;
         if (person.p1.y <= platform.p2.y && person.p1.y > platform.p1.y) {
             if (platform.p1.x >= person.p2.x || platform.p2.x <= person.p1.x) {
-                console.log('pass middle');
                 checkLogic.setChecker(new CheckerMiddlePlatform);
                 return checkLogic.check();
             } else {
-                console.log(`${platform.p2.y} this`);
                 return function(checkLogic) {
                     this.setCoordinate({
                         x: this.coordinate.p1.x, 
@@ -92,7 +89,6 @@ class CheckerTopPlatform {
                 this.move.down = false;
             }
         } else if ((platform.p1.x >= person.p2.x || platform.p2.x <= person.p1.x) && (platform.p1.y < person.p2.y && platform.p2.y > person.p2.y)) {
-            console.log('midddle');
             checkLogic.setChecker(new CheckerMiddlePlatform);
             return checkLogic.check();
         }

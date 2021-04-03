@@ -1,61 +1,93 @@
-.Menu, .Game {
+.Game {
     position: relative;
-    margin: 30px auto 0px;
     width: 300px;
     height: 400px;
-    overflow: hidden;
-    background-color: #0202f0;
+    background-color: blue;
 }
 
-.Menu .buttons {
+
+.status {
+    display: block;
     position: absolute;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-    margin-left: 0;
-    padding-left: 0;
+    z-index: 1;
+    height: 30px;
+    width: 190px;
+    font-size: 0;/* zero space*/
+    left: 37%;
 }
 
-.Menu .buttons li {
-    list-style-type: none;
-    margin: 0 auto 20px;
+.heart-1, .heart-2, .heart-3 {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url(screen/unit_logic.png);
+    background-size: cover;
+    margin-right: 10px;
 }
 
-.Menu .buttons li button {
-    text-transform: uppercase;
-    border-radius: 5px;
-    width: 70px;
-    display: block;
+.heart-1.red, .heart-2.red, .heart-3.red {
+    background-position: right 59px top 0px;
 }
 
-.Menu .buttons li button:hover {
-    color: blue;
-    cursor: pointer;
-    transform: scale(1.2);
-    transition: 0.5s;
+.heart-3 {
+    margin-right: 5px;
 }
 
-.title {
-    display: block;
-    margin: 20px;
-    text-align: center;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: blue;
-    background-color: white;
-    padding: 20px 0;
-    border-radius: 5px;
-    font-style: italic;
+.status .score {
+    display: inline-block;
+    vertical-align: top;
+    text-align: right;
+    width: 65px;
+    font-size: 30px;
+    line-height: 1;
 }
 
 .GameCanvans {
-    position: relative;
+    position: absolute;
     z-index: 0;
 }
 
-.eggCount {
+.Game .game-over,
+.game-win {
+    position: absolute;
     display: block;
-    position: relative;
-    color: red;
-    z-index: 1000;
-    width: 70px;
+    z-index: 2;
+    width: 300px;
+    height: 400px;
+    background-color: rgba(0, 0, 0, 0.45);
 }
+
+.Game .game-over .question,
+.game-win .win {
+    display: block;
+    text-align: center;
+    background-color: rgb(197, 194, 194, 0.9);
+    margin: 90px 20px 20px;
+    border-radius: 5px;
+    font-size: 30px;
+}
+
+.game-win .win {
+    margin-top: 130px;
+}
+
+.Game .regame {
+    display: block;
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    background-image: url(screen/reset.png);
+    background-position: 3px, 5px;
+    background-color: rgb(197, 194, 194, 0.9);
+    background-size: 90%, 90%;
+    background-repeat: no-repeat;
+}
+
+.Game .game-over .question h2,
+.Game .game-over .question p
+ {
+    text-align: center;
+    margin: 0;
+    margin-top: 10px;
+}
+

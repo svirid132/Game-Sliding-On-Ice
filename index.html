@@ -8,17 +8,25 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
 </head>
 <body>
-    <div class="Menu" hidden>
-        <span class="title">slidingOnIce</span>
-        <ul class="buttons">
-            <li><button class = "play">play</button></li>
-            <li><button class = "setting">setting</button></li>
-            <li><button class = "about">about</button></li>
-        </ul>
-    </div>
     <div class="Game">
+            <div class="status">
+                <span class="heart-1 red"></span>
+                <span class="heart-2 red"></span>
+                <span class="heart-3 red"></span>
+                <span class="score">0/10</span>
+            </div>
+            <div class= "game-over">
+                <div class="question">
+                    <h2>You lose</h2>
+                    <p>You should regame?</p>
+                </div>
+                <button class = "regame"></button>
+            </div>
+            <div class= "game-win">
+                <h2 class= "win">YOU WIN!!!</h2>
+                <button class = "regame"></button>
+            </div>
             <canvas class="GameCanvas" width="300" height="400"></canvas>
-            <span class="eggCount">0/10</span>  
     </div>
     <script type="module" src='checker.js'></script>
     <script type="module" src="main.js"></script>
